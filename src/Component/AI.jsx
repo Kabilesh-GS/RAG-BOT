@@ -1,6 +1,10 @@
 import { GoogleGenAI } from '@google/genai'
 import { useState, useRef } from 'react'
 import Markdown from 'react-markdown';
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GOOGLE_GENAI_API_KEY
@@ -10,6 +14,22 @@ function AI() {
   const [prompt, setPrompt] = useState('')
   const [output, setOutput] = useState('')
   const fileRef = useRef(null)
+
+  const TextFunction = async (e) => {
+    const file = fileRef.current?.files[0]
+    if (!file) return
+
+    const data = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data }).promise;
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+
+        const textContent = await page.getTextContent();
+
+        console.log(pageNum, textContent.items);
+    }
+  }
 
   const AiFunction = async (e) => {
     if (!prompt.trim()) return
@@ -55,7 +75,7 @@ function AI() {
         <input type="text" placeholder="Enter your prompt" value={prompt} onChange={(e) => {setPrompt(e.target.value)}}/>
         <button type="button" onClick={AiFunction}>Submit</button>
         <input type="file" accept="application/pdf" ref={fileRef} />
-        <button type="button">Submit</button>
+        <button type="button" onClick={TextFunction}>Submit</button>
       </form>
 
       <Markdown>{output}</Markdown>
