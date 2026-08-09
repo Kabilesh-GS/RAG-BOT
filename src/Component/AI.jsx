@@ -19,16 +19,18 @@ function AI() {
     const file = fileRef.current?.files[0]
     if (!file) return
 
+    let fullText = ''
     const data = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data }).promise;
 
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
-
         const textContent = await page.getTextContent();
-
-        console.log(pageNum, textContent.items);
+        console.log(`Page ${pageNum} text content:`, textContent)
+        fullText += textContent.items.map((item) => item.str).join(' ') + '\n'
+        console.log(`Page ${pageNum} text:`, fullText)
     }
+    return fullText
   }
 
   const AiFunction = async (e) => {
@@ -37,12 +39,12 @@ function AI() {
     try {
 
       if (!file){
-        const interaction = await ai.interactions.create({
+        const interaction = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
-          input: prompt
+          contents: [{ text: prompt }]
         })
-        console.log(interaction.output_text)
-        setOutput(interaction.output_text)
+        console.log(interaction.candidates[0].content.parts[0].text)
+        setOutput(interaction.candidates[0].content.parts[0].text)
       }
 
       else{
@@ -51,15 +53,15 @@ function AI() {
           file: file,
           config: { mimeType },
         })
-        const interaction = await ai.interactions.create({
+        const interaction = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
-          input: [
-            { type: 'document', uri: upload.uri, mime_type: mimeType },
-            { type: 'text', text: prompt },
+          contents: [
+            {fileData : {fileUri : upload.uri , mimeType : mimeType || upload.mimeType}},
+            {text: prompt}
           ],
         })
-        console.log(interaction.output_text)
-        setOutput(interaction.output_text)
+        console.log(interaction.candidates[0].content.parts[0].text)
+        setOutput(interaction.candidates[0].content.parts[0].text)
       }
     } 
     catch (err) {
