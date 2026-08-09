@@ -22,7 +22,6 @@ This README serves as a progress tracker, documenting the concepts learned and f
   - PDF text extraction
   - Chunking strategies
   - Text embeddings
-  - Vector search basics
 
 ---
 
