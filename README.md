@@ -28,3 +28,9 @@ This README serves as a progress tracker, documenting the concepts learned and f
 ### ✅ Till Aug 9<sup>th</sup>
 - Implemented PDF text extraction using **PDF.js**.
 - Extracted page-wise text content.
+
+---
+
+### ✅ Till Aug 10<sup>th</sup>
+- Implemented chunking the extracted text
+- Understanding chunk overlap 
