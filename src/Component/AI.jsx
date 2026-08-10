@@ -13,10 +13,10 @@ const ai = new GoogleGenAI({
 function AI() {
   const [prompt, setPrompt] = useState('')
   const [output, setOutput] = useState('')
+  const [state, setState] = useState('')
   const fileRef = useRef(null)
 
-  const TextFunction = async (e) => {
-    const file = fileRef.current?.files[0]
+  const TextFunction = async (file) => {
     if (!file) return
 
     let fullText = ''
@@ -30,11 +30,10 @@ function AI() {
         fullText += textContent.items.map((item) => item.str).join(' ') + '\n'
         // console.log(`Page ${pageNum} text:`, fullText)
     }
-    chunkText(fullText);
     return fullText
   }
 
-  const chunkText = (text, SIZE = 1000, overlap = 150) => {
+  const chunkText = async (text, SIZE = 1000, overlap = 150) => {
     const cleaned = text.replace(/\s+/g, ' ').trim()
     const result = []
     let start = 0
@@ -48,6 +47,19 @@ function AI() {
       // console.log("result", result)
     }
     return result
+  }
+
+  const UploadFunction = async (e) => {
+    const file = fileRef.current?.files[0]
+    if (!file) return
+
+    setState("Extracting text from PDF...")
+    const fullText = await TextFunction(file);
+    console.log("Full text extracted:", fullText)
+
+    setState("Chuncking text...")
+    const chunks = await chunkText(fullText);
+    console.log("Chunks created:", chunks)
   }
 
   const AiFunction = async (e) => {
@@ -87,17 +99,47 @@ function AI() {
   }
 
   return (
-    <div>
-      <h1>AI Component</h1>
+    <div className="nb-page">
+      <header className="nb-header">
+        <h1 className="nb-title">RAG</h1>
+        <span className="nb-tag">Ask your PDF</span>
+      </header>
 
-      <form>
-        <input type="text" placeholder="Enter your prompt" value={prompt} onChange={(e) => {setPrompt(e.target.value)}}/>
-        <button type="button" onClick={AiFunction}>Submit</button>
-        <input type="file" accept="application/pdf" ref={fileRef} />
-        <button type="button" onClick={TextFunction}>Submit</button>
-      </form>
+      <div className="nb-card">
+        <form className="nb-form">
+          <div>
+            <label className="nb-label" htmlFor="nb-prompt">Prompt</label>
+            <div className="nb-row">
+              <input
+                id="nb-prompt"
+                className="nb-input"
+                type="text"
+                placeholder="Enter your prompt"
+                value={prompt}
+                onChange={(e) => {setPrompt(e.target.value)}}
+              />
+              <button className="nb-btn nb-btn-primary" type="button" onClick={AiFunction}>Submit</button>
+            </div>
+          </div>
 
-      <Markdown>{output}</Markdown>
+          <div>
+            <label className="nb-label" htmlFor="nb-file">PDF Document</label>
+            <div className="nb-row">
+              <input id="nb-file" className="nb-file" type="file" accept="application/pdf" ref={fileRef} />
+              <button className="nb-btn nb-btn-secondary" type="button" onClick={UploadFunction}>Upload</button>
+            </div>
+          </div>
+
+          {state && <div className="nb-status">{state}</div>}
+        </form>
+      </div>
+
+      <section className="nb-output">
+        <div className="nb-output-head">Output</div>
+        {output
+          ? <div className="nb-output-body"><Markdown>{output}</Markdown></div>
+          : <div className="nb-empty">Nothing here yet — ask something above.</div>}
+      </section>
     </div>
   )
 }

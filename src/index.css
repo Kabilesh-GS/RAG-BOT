@@ -1,0 +1,29 @@
+:root {
+  --nb-bg: #fdf6e3;
+  --nb-ink: #000000;
+  --nb-yellow: #ffe14d;
+  --nb-pink: #ff90e8;
+  --nb-blue: #7cc4ff;
+  --nb-green: #7ee787;
+  --nb-white: #ffffff;
+  --nb-border: 3px solid var(--nb-ink);
+  --nb-shadow: 6px 6px 0 var(--nb-ink);
+  --nb-shadow-sm: 4px 4px 0 var(--nb-ink);
+
+  font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
+  color: var(--nb-ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--nb-bg);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
