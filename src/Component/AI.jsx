@@ -26,11 +26,28 @@ function AI() {
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const textContent = await page.getTextContent();
-        console.log(`Page ${pageNum} text content:`, textContent)
+        // console.log(`Page ${pageNum} text content:`, textContent)
         fullText += textContent.items.map((item) => item.str).join(' ') + '\n'
-        console.log(`Page ${pageNum} text:`, fullText)
+        // console.log(`Page ${pageNum} text:`, fullText)
     }
+    chunkText(fullText);
     return fullText
+  }
+
+  const chunkText = (text, SIZE = 1000, overlap = 150) => {
+    const cleaned = text.replace(/\s+/g, ' ').trim()
+    const result = []
+    let start = 0
+
+    while (start < cleaned.length) {
+      const end = Math.min(start + SIZE, cleaned.length)
+      // console.log(`Chunk from ${start} to ${end}:`)
+      result.push(cleaned.slice(start, end))
+      if (end === cleaned.length) break
+      start = end - overlap
+      // console.log("result", result)
+    }
+    return result
   }
 
   const AiFunction = async (e) => {
@@ -43,7 +60,7 @@ function AI() {
           model: 'gemini-2.5-flash',
           contents: [{ text: prompt }]
         })
-        console.log(interaction.candidates[0].content.parts[0].text)
+        // console.log(interaction.candidates[0].content.parts[0].text)
         setOutput(interaction.candidates[0].content.parts[0].text)
       }
 
@@ -60,7 +77,7 @@ function AI() {
             {text: prompt}
           ],
         })
-        console.log(interaction.candidates[0].content.parts[0].text)
+        // console.log(interaction.candidates[0].content.parts[0].text)
         setOutput(interaction.candidates[0].content.parts[0].text)
       }
     } 
