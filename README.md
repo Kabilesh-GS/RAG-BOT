@@ -8,29 +8,7 @@ This README serves as a progress tracker, documenting the concepts learned and f
 
 ## Progress Timeline
 
-### ✅ Till Aug 3<sup>rd</sup>
-- Set up the React application.
-- Built a basic PDF upload workflow.
-- Implemented a simple question-answer pipeline using Gemini.
-
----
-
-### ✅ Till Aug 4<sup>th</sup>
-- Learned the end-to-end RAG architecture.
-- Explored how document retrieval works.
-- Understood:
-  - PDF text extraction
-  - Chunking strategies
-  - Text embeddings
-
----
-
-### ✅ Till Aug 9<sup>th</sup>
-- Implemented PDF text extraction using **PDF.js**.
-- Extracted page-wise text content.
-
----
-
-### ✅ Till Aug 10<sup>th</sup>
-- Implemented chunking the extracted text
-- Understanding chunk overlap 
+- ✅ **Aug 3** — Set up the React app with a basic PDF upload workflow and a simple Gemini question-answer pipeline.
+- ✅ **Aug 4** — Learned the end-to-end RAG architecture: document retrieval, PDF text extraction, chunking strategies, and text embeddings.
+- ✅ **Aug 9** — Implemented page-wise PDF text extraction using **PDF.js**.
+- ✅ **Aug 10** — Implemented chunking of the extracted text and understood chunk overlap; applied a NeoBrutalism design pattern to the UI.
