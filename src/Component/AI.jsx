@@ -49,6 +49,25 @@ function AI() {
     return result
   }
 
+  const embedText = async (result) => {
+    const embeds = [];
+
+    for (const text of result){
+      const response = await ai.models.embedContent({
+        model : "gemini-embedding-001",
+        contents : text,
+        config : {
+          taskType : "RETRIEVAL_DOCUMENT",
+          outputDimensionality : 1536
+        }
+      })
+      // console.log("Each embed : ", response.embeddings[0].values)
+      embeds.push(response.embeddings[0].values)
+    }
+
+    return embeds;
+  }
+
   const UploadFunction = async (e) => {
     const file = fileRef.current?.files[0]
     if (!file) return
@@ -60,6 +79,10 @@ function AI() {
     setState("Chuncking text...")
     const chunks = await chunkText(fullText);
     console.log("Chunks created:", chunks)
+
+    setState("Embedding...")
+    const embeds = await embedText(chunks);
+    console.log("Embeds : ", embeds)
   }
 
   const AiFunction = async (e) => {
