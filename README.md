@@ -13,3 +13,4 @@ This README serves as a progress tracker, documenting the concepts learned and f
 - ✅ **Aug 9** — Implemented page-wise PDF text extraction using **PDF.js**.
 - ✅ **Aug 10** — Implemented chunking of the extracted text and understood chunk overlap; applied a NeoBrutalism design pattern to the UI.
 - ✅ **Aug 17** — Generated embeddings for each chunk using Gemini's `gemini-embedding-001` model, with the `RETRIEVAL_DOCUMENT` task type.
+- ✅ **Aug 21** — Completed the retrieval loop: embedded the user's prompt with the `RETRIEVAL_QUERY` task type, ranked chunks by **cosine similarity**, and passed the top 3 as context to `gemini-2.5-flash` for a grounded answer.
